@@ -51,4 +51,15 @@ if let i = CommandLine.arguments.firstIndex(of: "--check-safety") {
     exit(0)
 }
 
+// Debug aid: `--check-fda` reports whether protected files can be read.
+if CommandLine.arguments.contains("--check-fda") {
+    let home = FileManager.default.homeDirectoryForCurrentUser.path
+    for p in [home + "/Library/Safari", home + "/Library/Mail", home + "/Library/Messages",
+              home + "/Library/Containers/com.apple.stocks", "/Library/Application Support/com.apple.TCC"] {
+        if let d = opendir(p) { closedir(d); print("readable ", p) } else { print("blocked(\(errno))", p) }
+    }
+    print("checkFullDiskAccess =", CleanerModel.checkFullDiskAccess())
+    exit(0)
+}
+
 TidyLeftApp.main()

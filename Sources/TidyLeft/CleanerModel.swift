@@ -14,6 +14,32 @@ final class CleanerModel: ObservableObject {
     @Published var search = ""
     @Published var message: String?
     @Published var confirmTrash = false
+    @Published var hasFullDiskAccess = CleanerModel.checkFullDiskAccess()
+
+    private var activeObserver: NSObjectProtocol?
+
+    init() {
+        // Re-check whenever the user comes back from System Settings.
+        activeObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didBecomeActiveNotification, object: nil, queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated { self?.hasFullDiskAccess = CleanerModel.checkFullDiskAccess() }
+        }
+    }
+
+    /// Folders macOS hides from apps without Full Disk Access. If any of them can be
+    /// listed, access is granted; missing folders are skipped (not every Mac has them).
+    nonisolated static func checkFullDiskAccess() -> Bool {
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        let probes = [home + "/Library/Safari", home + "/Library/Mail", home + "/Library/Messages",
+                      home + "/Library/Containers/com.apple.stocks", "/Library/Application Support/com.apple.TCC"]
+        for path in probes {
+            guard let dir = opendir(path) else { continue }   // EPERM (blocked) or ENOENT (missing)
+            closedir(dir)
+            return true
+        }
+        return false
+    }
 
     var visibleGroups: [LeftoverGroup] {
         let q = search.lowercased()

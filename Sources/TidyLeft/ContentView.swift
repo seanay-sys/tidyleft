@@ -145,9 +145,14 @@ struct ContentView: View {
 
     private var footer: some View {
         HStack {
-            Button("Grant Full Disk Access…") { model.openFullDiskAccessSettings() }
-                .buttonStyle(.link)
-                .help("Lets the app see and clean protected folders without repeated prompts.")
+            if model.hasFullDiskAccess {
+                Label("Full Disk Access granted", systemImage: "checkmark.shield")
+                    .foregroundStyle(.secondary)
+            } else {
+                Button("Grant Full Disk Access…") { model.openFullDiskAccessSettings() }
+                    .buttonStyle(.link)
+                    .help("Lets the app see and clean protected folders without repeated prompts.")
+            }
             Spacer()
             Text("\(model.selectedItems.count) selected · \(Format.bytes(model.selectedSize))")
                 .monospacedDigit().foregroundStyle(.secondary)
