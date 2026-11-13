@@ -48,3 +48,7 @@ scripts/make-dmg.sh
 ```
 
 This writes `dist/LeftoverCleaner-<version>.dmg`, which holds the app (Apple Silicon and Intel), an Applications shortcut for drag-to-install, and a "Read Me First" note. The build is ad-hoc signed, not notarized, so on first launch recipients have to allow it under **System Settings → Privacy & Security → Open Anyway**. Removing that step needs an Apple Developer ID ($99/year), then `codesign --sign "Developer ID Application: …" --options runtime` and `xcrun notarytool submit`.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
