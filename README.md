@@ -6,6 +6,8 @@ TidyLeft is a free, open-source Mac cleaner that finds the files uninstalled app
 
 It's a native SwiftUI app for macOS 14 and later, on Apple Silicon and Intel. [Download the latest DMG](https://github.com/seanay-sys/tidyleft/releases/latest).
 
+![TidyLeft window](docs/screenshot.png)
+
 ## Build & run
 
 ```bash
