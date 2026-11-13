@@ -44,7 +44,8 @@ struct ContentView: View {
                 .foregroundStyle(.tint)
             VStack(alignment: .leading, spacing: 2) {
                 Text("TidyLeft").font(.title2.bold())
-                Text(model.status).font(.callout).foregroundStyle(.secondary).lineLimit(1)
+                Text(model.status).font(.callout).foregroundStyle(.secondary)
+                    .lineLimit(2).fixedSize(horizontal: false, vertical: true)
             }
             Spacer()
             Picker("Show", selection: $model.minConfidence) {
@@ -62,15 +63,17 @@ struct ContentView: View {
                 model.scan()
             } label: {
                 if model.isScanning {
-                    ProgressView().controlSize(.small).frame(width: 60)
+                    ProgressView().controlSize(.small).frame(minWidth: 80)
                 } else {
                     Label(model.hasScanned ? "Rescan" : "Scan", systemImage: "magnifyingglass")
-                        .frame(width: 60)
+                        .fixedSize()
+                        .frame(minWidth: 80)
                 }
             }
             .buttonStyle(.borderedProminent)
             .controlSize(.large)
             .disabled(model.isScanning)
+            .layoutPriority(1)
         }
         .padding(16)
     }
@@ -131,7 +134,9 @@ struct ContentView: View {
             Text(model.hasScanned ? "Nothing to clean at this level" : "Ready when you are")
                 .font(.title3.weight(.semibold))
             Text(model.hasScanned
-                 ? "Try “Likely + Possible”, or include app containers."
+                 ? (model.minConfidence == .high
+                    ? "Try “Likely + Possible”, or include app containers."
+                    : (model.includeContainers ? "Your Library looks clean." : "Your Library looks clean. You can also include app containers."))
                  : "TidyLeft compares your Library folders against every installed app\nand lists files that no longer have an owner. Nothing is removed until you choose.")
                 .multilineTextAlignment(.center).foregroundStyle(.secondary)
             if !model.hasScanned {

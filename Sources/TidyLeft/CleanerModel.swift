@@ -94,7 +94,7 @@ final class CleanerModel: ObservableObject {
                 // Only pre-select the items we're most confident about.
                 self.selected = Set(result.groups.flatMap(\.items).filter { $0.confidence == .high }.map(\.url))
                 let total = result.groups.reduce(0) { $0 + $1.totalSize }
-                self.status = "Checked against \(result.appCount) installed apps · found \(result.groups.count) leftovers (\(Format.bytes(total)))"
+                self.status = "\(result.groups.count) leftovers found (\(Format.bytes(total))) · checked against \(result.appCount) apps"
                 self.isScanning = false
                 self.hasScanned = true
             }
