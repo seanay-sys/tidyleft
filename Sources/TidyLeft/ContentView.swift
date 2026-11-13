@@ -43,7 +43,7 @@ struct ContentView: View {
                 .font(.system(size: 30))
                 .foregroundStyle(.tint)
             VStack(alignment: .leading, spacing: 2) {
-                Text("Leftover Cleaner").font(.title2.bold())
+                Text("TidyLeft").font(.title2.bold())
                 Text(model.status).font(.callout).foregroundStyle(.secondary).lineLimit(1)
             }
             Spacer()
@@ -132,7 +132,7 @@ struct ContentView: View {
                 .font(.title3.weight(.semibold))
             Text(model.hasScanned
                  ? "Try “Likely + Possible”, or include app containers."
-                 : "Leftover Cleaner compares your Library folders against every installed app\nand lists files that no longer have an owner. Nothing is removed until you choose.")
+                 : "TidyLeft compares your Library folders against every installed app\nand lists files that no longer have an owner. Nothing is removed until you choose.")
                 .multilineTextAlignment(.center).foregroundStyle(.secondary)
             if !model.hasScanned {
                 Button("Scan Now") { model.scan() }

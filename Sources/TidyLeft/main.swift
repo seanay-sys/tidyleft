@@ -1,11 +1,11 @@
 import AppKit
 import SwiftUI
 
-struct LeftoverCleanerApp: App {
+struct TidyLeftApp: App {
     @NSApplicationDelegateAdaptor private var delegate: AppDelegate
 
     var body: some Scene {
-        WindowGroup("Leftover Cleaner") {
+        WindowGroup("TidyLeft") {
             ContentView()
         }
         .windowResizability(.contentMinSize)
@@ -21,7 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
 }
 
-// `LeftoverCleaner --report [--containers]` prints a dry-run report without opening a window.
+// `TidyLeft --report [--containers]` prints a dry-run report without opening a window.
 if CommandLine.arguments.contains("--report") {
     let scanner = LeftoverScanner(includeContainers: CommandLine.arguments.contains("--containers"))
     let result = scanner.scan { FileHandle.standardError.write(($0 + "\n").data(using: .utf8)!) }
@@ -51,4 +51,4 @@ if let i = CommandLine.arguments.firstIndex(of: "--check-safety") {
     exit(0)
 }
 
-LeftoverCleanerApp.main()
+TidyLeftApp.main()

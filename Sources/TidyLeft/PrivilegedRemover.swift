@@ -15,7 +15,7 @@ enum PrivilegedRemover {
         let fm = FileManager.default
         let shell = shellScript(for: urls, trash: fm.homeDirectoryForCurrentUser.appendingPathComponent(".Trash"))
         let apple = "do shell script \"\(escapeForAppleScript(shell))\" with prompt "
-            + "\"Leftover Cleaner wants to move system files left by uninstalled apps to the Trash.\" "
+            + "\"TidyLeft wants to move system files left by uninstalled apps to the Trash.\" "
             + "with administrator privileges"
         return run(apple, urls: urls)
     }

@@ -1,4 +1,4 @@
-// Draws the Leftover Cleaner app icon (1024×1024 PNG) with plain Core Graphics.
+// Draws the TidyLeft app icon (1024×1024 PNG) with plain Core Graphics.
 // Usage: swift scripts/make-icon.swift OUTPUT.png
 import AppKit
 

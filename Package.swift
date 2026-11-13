@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "LeftoverCleaner",
+    name: "TidyLeft",
     platforms: [.macOS(.v14)],
     targets: [
         .executableTarget(
-            name: "LeftoverCleaner",
-            path: "Sources/LeftoverCleaner",
+            name: "TidyLeft",
+            path: "Sources/TidyLeft",
             linkerSettings: [.linkedFramework("Security")]
         )
     ]
