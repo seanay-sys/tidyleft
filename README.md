@@ -54,3 +54,7 @@ This writes `dist/LeftoverCleaner-<version>.dmg`, which holds the app (Apple Sil
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Support
+
+If this saved you some disk space, you can [buy me a coffee on Ko-fi](https://ko-fi.com/seanaysys) ☕. It's a thank-you, not a purchase: the app stays free and comes with no support or warranty.
