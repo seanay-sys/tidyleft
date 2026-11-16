@@ -206,11 +206,11 @@ struct LeftoverScanner: Sendable {
         return (key, ident, item)
     }
 
-    private static func launchdLabel(_ url: URL) -> String? {
+    static func launchdLabel(_ url: URL) -> String? {
         (NSDictionary(contentsOf: url) as? [String: Any])?["Label"] as? String
     }
 
-    private static func launchAgentProgram(_ url: URL) -> String? {
+    static func launchAgentProgram(_ url: URL) -> String? {
         guard let d = NSDictionary(contentsOf: url) as? [String: Any] else { return nil }
         let p = (d["Program"] as? String) ?? (d["ProgramArguments"] as? [String])?.first
         guard let p, p.hasPrefix("/") || p.hasPrefix("~") else { return nil }

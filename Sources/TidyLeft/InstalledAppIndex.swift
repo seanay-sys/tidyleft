@@ -84,18 +84,35 @@ struct InstalledAppIndex: Sendable {
     }
 
     private mutating func addSigningInfo(_ url: URL) {
+        let info = Self.signingInfo(url)
+        if let team = info.team { teamIDs.insert(team.lowercased()) }
+        info.groups.forEach { appGroups.insert($0.lowercased()) }
+    }
+
+    /// Code-signing team ID and app-group entitlements of an app bundle.
+    static func signingInfo(_ url: URL) -> (team: String?, groups: [String]) {
         var code: SecStaticCode?
-        guard SecStaticCodeCreateWithPath(url as CFURL, [], &code) == errSecSuccess, let code else { return }
+        guard SecStaticCodeCreateWithPath(url as CFURL, [], &code) == errSecSuccess, let code else { return (nil, []) }
         var info: CFDictionary?
         guard SecCodeCopySigningInformation(code, SecCSFlags(rawValue: kSecCSSigningInformation), &info) == errSecSuccess,
-              let dict = info as? [String: Any] else { return }
-        if let team = dict[kSecCodeInfoTeamIdentifier as String] as? String {
-            teamIDs.insert(team.lowercased())
+              let dict = info as? [String: Any] else { return (nil, []) }
+        let team = dict[kSecCodeInfoTeamIdentifier as String] as? String
+        let ent = dict[kSecCodeInfoEntitlementsDict as String] as? [String: Any]
+        return (team, ent?["com.apple.security.application-groups"] as? [String] ?? [])
+    }
+
+    /// Bundle IDs of an app's own helpers, login items and extensions (not shared frameworks).
+    static func helperBundleIDs(_ url: URL) -> [String] {
+        let dirs = ["Contents/Library/LoginItems", "Contents/Library/LaunchServices", "Contents/PlugIns",
+                    "Contents/XPCServices", "Contents/Helpers", "Contents/Library/SystemExtensions"]
+        var ids: [String] = []
+        for sub in dirs {
+            let dir = url.appendingPathComponent(sub)
+            for item in (try? FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)) ?? [] {
+                if let id = Bundle(url: item)?.bundleIdentifier { ids.append(id) }
+            }
         }
-        if let ent = dict[kSecCodeInfoEntitlementsDict as String] as? [String: Any],
-           let groups = ent["com.apple.security.application-groups"] as? [String] {
-            groups.forEach { appGroups.insert($0.lowercased()) }
-        }
+        return ids
     }
 
     mutating func addID(_ raw: String) {

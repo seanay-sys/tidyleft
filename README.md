@@ -2,11 +2,21 @@
 
 > **⚠️ Disclaimer: use at your own risk.** I built TidyLeft for my own Mac, with the help of Claude (an AI assistant), because I wanted a free tool for this. I'm sharing it in case it's useful to others, but it comes with no warranty and no support, and I'm not responsible for any data loss or damage to your system. Review what it lists before removing anything, and keep a backup (for example Time Machine). Removed items go to the Trash, so check it before you empty it.
 
-TidyLeft is a free, open-source Mac cleaner that finds the files uninstalled apps leave behind (caches, preferences, Application Support folders, launch agents and helper tools) and moves the ones you pick to the Trash. Dragging an app to the Trash doesn't remove these leftovers; TidyLeft finds them and frees up disk space without touching macOS system files.
+TidyLeft is a free, open-source Mac cleaner. It finds the files uninstalled apps leave behind, uninstalls apps completely, clears developer caches, shows what's using space, and fixes broken app settings, without touching macOS system files. Everything you remove goes to the Trash first.
 
 It's a native SwiftUI app for macOS 14 and later, on Apple Silicon and Intel. [Download the latest DMG](https://github.com/seanay-sys/tidyleft/releases/latest).
 
 ![TidyLeft window](docs/screenshot.png)
+
+## What it does
+
+| Section | What it cleans |
+| --- | --- |
+| **Leftovers** | Preferences, caches, containers, launch agents and helper tools left by apps you already deleted. |
+| **Uninstall Apps** | Removes an app *and* everything it installed (settings, caches, containers, background services, helpers) in one step. It quits the app first. Files that other apps from the same developer may share are left unticked. |
+| **Developer Junk** | Xcode derived data, device support files and simulator caches, plus Homebrew, npm, Yarn, pnpm, Bun, pip, CocoaPods, Carthage, Gradle, Maven, Cargo, Go and Composer caches, and VS Code and JetBrains caches. All of it is rebuilt or re-downloaded when needed. |
+| **Disk Usage** | A TreeSize-style size browser: biggest folders first, with size bars and percentages. Click into folders to drill down. It opens on app caches, and you can scan your home folder or any folder you choose. Caches and logs can be removed; your main folders, app libraries and anything belonging to macOS are locked. |
+| **Broken Settings** | Third-party preference files that are damaged, empty, or owned by another user (for example after running an app with `sudo`). These can make apps crash at launch or forget their settings. Resetting moves the file to the Trash, and the app starts fresh. |
 
 ## Build & run
 
@@ -27,9 +37,11 @@ To check whether the safety policy would ever allow removing a path:
 "build/TidyLeft.app/Contents/MacOS/TidyLeft" --check-safety ~/Library/Preferences/com.apple.finder.plist
 ```
 
+Dry runs for the other sections (they print what would be offered and never move anything): `--list-apps`, `--related "App Name"`, `--dev-junk`, `--broken-settings`, `--disk-usage ~/Library/Caches`, and `--check-paths PATH…`, which shows which rule applies to each path.
+
 After a scan, **Select all leftovers** ticks everything currently shown (it follows the Likely/Possible filter and search). Hidden items are never removed.
 
-## How it decides something is a leftover
+## How Leftovers decides something is a leftover
 
 1. **Builds an index of installed software**: every `.app` in `/Applications`, `~/Applications`, `/System/Applications`, CoreServices, plus anything Spotlight knows about (except in the Trash). It records bundle IDs (including embedded helpers, extensions, and frameworks), app names, code-signing team IDs, app-group entitlements, running apps, and Homebrew/CLI tool names.
 2. **Scans** `~/Library` (Application Support, Caches, Preferences, Saved Application State, HTTPStorages, WebKit, Cookies, Logs, Application Scripts, LaunchAgents, and optionally Containers and Group Containers) and, with **System-wide** on, `/Library` (Application Support, Caches, Preferences, Logs, LaunchAgents, LaunchDaemons, PrivilegedHelperTools).

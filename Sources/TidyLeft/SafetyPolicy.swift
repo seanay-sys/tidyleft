@@ -85,4 +85,65 @@ enum SafetyPolicy {
         return FileManager.default.isExecutableFile(atPath: url.path)
             && (try? url.resourceValues(forKeys: [.isRegularFileKey]))?.isRegularFile == true
     }
+
+    // MARK: Rules for the other sections
+
+    /// An app bundle the uninstaller may move to the Trash: third-party, in an Applications folder.
+    static func canUninstall(_ url: URL) -> Bool {
+        let url = url.standardizedFileURL
+        let p = url.path
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        guard url.pathExtension == "app",
+              p.hasPrefix("/Applications/") || p.hasPrefix(home + "/Applications/") else { return false }
+        if systemPathPrefixes.contains(where: { p.hasPrefix($0) }) { return false }
+        guard let id = Bundle(url: url)?.bundleIdentifier, !isAppleIdentifier(id) else { return false }
+        if ["local.tidyleft", Bundle.main.bundleIdentifier?.lowercased()].contains(id.lowercased()) { return false }
+        if hasProtectedFlags(p) { return false }
+        return !isAppleSigned(url)
+    }
+
+    /// Developer caches: only the exact folders in the built-in catalog.
+    static func canRemoveDevJunk(_ url: URL) -> Bool {
+        let p = url.standardizedFileURL.path
+        return DevJunkCatalog.allowedPaths.contains(p) && !hasProtectedFlags(p)
+    }
+
+    /// Disk Usage: why an item can't be removed, or nil when it can.
+    static func diskUsageBlockReason(_ url: URL, isDirectory: Bool) -> String? {
+        let p = url.standardizedFileURL.path
+        let home = FileManager.default.homeDirectoryForCurrentUser.path
+        guard p.hasPrefix(home + "/") else { return "Outside your home folder" }
+        let parts = p.dropFirst(home.count + 1).split(separator: "/").map(String.init)
+        if parts.first == ".Trash" { return "Already in the Trash" }
+        if parts.count == 1, isDirectory { return "One of your main folders" }
+        if ["photoslibrary", "photolibrary", "musiclibrary", "tvlibrary", "aplibrary"].contains(url.pathExtension.lowercased()) {
+            return "An app library — manage it from inside its app"
+        }
+        if parts.first == "Library" {
+            guard parts.count >= 3, ["Caches", "Logs"].contains(parts[1]) else {
+                return "Inside ~/Library — use Leftovers or Uninstall Apps for this"
+            }
+            if parts.dropFirst(2).contains(where: { isAppleIdentifier($0) }) || isAppleCacheName(parts[2]) {
+                return "Used by macOS"
+            }
+        }
+        if hasProtectedFlags(p) { return "Protected by macOS" }
+        return nil
+    }
+
+    /// Cache and log folders macOS creates without an Apple identifier in the name.
+    private static let appleCacheNames: Set<String> = [
+        "amsdatamigratortool", "cloudkit", "familycircle", "familycircled", "gamekit", "gamestorekit", "geoservices",
+        "jetpackcache", "jetpackresourcebundles", "phtphenotype", "passkit", "softwareupdate", "ssu", "assistant",
+        "baseband", "crashreporter", "diagnosticreports", "discrecording", "privacypreservingmeasurement",
+        "sirittsservice", "mobiledevice", "quicklook", "metadata", "storedownloadd", "icloud", "maps", "mail",
+        "messages", "safari", "coreSimulator".lowercased(), "bluetooth", "wifi", "powermanagement", "installer",
+        "dock", "finder", "spotlight", "translation", "weather", "stocks", "news", "music", "tv", "podcasts",
+    ]
+    private static let appleCachePrefixes = ["pfscenetaxonomy", "photos", "siri", "fsck_", "apple", "imessage", "facetime"]
+
+    static func isAppleCacheName(_ raw: String) -> Bool {
+        let name = (raw as NSString).deletingPathExtension.lowercased()
+        return appleCacheNames.contains(name) || appleCachePrefixes.contains { name.hasPrefix($0) }
+    }
 }
