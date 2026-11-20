@@ -42,6 +42,7 @@ enum Trasher {
         if !out.failures.isEmpty {
             text += "\n\nNot moved — Full Disk Access often fixes this:\n" + out.failures.prefix(8).joined(separator: "\n")
         }
+        if freed >= Support.mentionThreshold { text += "\n\n" + Support.coffeeLine }
         return text
     }
 }

@@ -162,7 +162,10 @@ extension View {
     func resultAlert(_ message: Binding<String?>) -> some View {
         alert("Cleanup finished", isPresented: Binding(get: { message.wrappedValue != nil },
                                                        set: { if !$0 { message.wrappedValue = nil } })) {
-            Button("OK") { message.wrappedValue = nil }
+            if message.wrappedValue?.contains(Support.coffeeLine) == true {
+                Button("Buy Me a Coffee") { Support.openKofi(); message.wrappedValue = nil }
+            }
+            Button("OK", role: .cancel) { message.wrappedValue = nil }
         } message: {
             Text(message.wrappedValue ?? "")
         }

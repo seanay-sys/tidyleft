@@ -73,4 +73,4 @@ MIT. See [LICENSE](LICENSE).
 
 ## Support
 
-If this saved you some disk space, you can [buy me a coffee on Ko-fi](https://ko-fi.com/seanaysys) ☕. It's a thank-you, not a purchase: the app stays free and comes with no support or warranty.
+If this saved you some disk space, you can [buy me a coffee on Ko-fi](https://ko-fi.com/seanaysys) ☕. It's a thank-you, not a purchase: the app stays free and comes with no support or warranty. The app also has a small **Buy me a coffee** link in the sidebar and the About window, and mentions it after a cleanup that frees 500 MB or more. It only opens the Ko-fi page in your browser; TidyLeft never handles payments or sends any data.

@@ -127,6 +127,11 @@ struct RootView: View {
             }
             Label("macOS files are never touched", systemImage: "checkmark.seal")
                 .font(.caption).foregroundStyle(.secondary)
+            Button { Support.openKofi() } label: {
+                Label("Buy me a coffee", systemImage: "cup.and.saucer")
+            }
+            .buttonStyle(.link).font(.caption)
+            .help("TidyLeft is free. If it helped, you can leave a tip on Ko-fi (opens in your browser).")
         }
         .padding(.horizontal, 12).padding(.bottom, 10)
     }

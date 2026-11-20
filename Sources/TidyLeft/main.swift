@@ -9,6 +9,15 @@ struct TidyLeftApp: App {
             RootView()
         }
         .windowResizability(.contentMinSize)
+        .commands {
+            CommandGroup(replacing: .appInfo) {
+                Button("About TidyLeft") { Support.showAbout() }
+            }
+            CommandGroup(replacing: .help) {
+                Button("TidyLeft on GitHub") { NSWorkspace.shared.open(Support.github) }
+                Button("Buy Me a Coffee…") { Support.openKofi() }
+            }
+        }
     }
 }
 
