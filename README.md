@@ -18,6 +18,16 @@ It's a native SwiftUI app for macOS 14 and later, on Apple Silicon and Intel. [D
 | **Disk Usage** | A TreeSize-style size browser: biggest folders first, with size bars and percentages. Click into folders to drill down. It opens on app caches, and you can scan your home folder or any folder you choose. Caches and logs can be removed; your main folders, app libraries and anything belonging to macOS are locked. |
 | **Broken Settings** | Third-party preference files that are damaged, empty, or owned by another user (for example after running an app with `sudo`). These can make apps crash at launch or forget their settings. Resetting moves the file to the Trash, and the app starts fresh. |
 
+## Install
+
+Download the latest DMG from [Releases](https://github.com/seanay-sys/tidyleft/releases/latest), or use Homebrew:
+
+```bash
+brew tap seanay-sys/tap
+brew trust seanay-sys/tap
+brew install --cask tidyleft
+```
+
 ## Build & run
 
 ```bash
