@@ -8,6 +8,8 @@ It's a native SwiftUI app for macOS 14 and later, on Apple Silicon and Intel. [D
 
 https://github.com/user-attachments/assets/7be4b69a-3ab9-4c5f-86df-f0d007c7b9e9
 
+Also on YouTube: [TidyLeft demo](https://youtu.be/T6DyIiJBTJA)
+
 ![TidyLeft window](docs/screenshot.png)
 
 ## What it does
